@@ -1,0 +1,29 @@
+clear all; close all; clc; tic;
+addpath('C:\Users\Eliezer\Dropbox\Pesquisa\Evidences\ompbox10');
+addpath('C:\Users\Eliezer\Dropbox\Pesquisa\Evidences\ksvdbox13');
+%%
+[Y,C] = evidencesGenerate(10,45,107);
+
+%%
+params.data = Y;
+params.Tdata = 200;
+params.dictsize = 800;
+params.iternum = 10;
+params.memusage = 'high';
+[D,~,~] = ksvd(params);
+X = omp(D'*Y,D'*D,params.Tdata);
+
+params.data = X;
+params.Tdata = 3;
+params.dictsize = 600;
+params.iternum = 10;
+params.memusage = 'high';
+[D2,~,~] = ksvd(params);
+X2 = omp(D'*Y,D'*D,params.Tdata);
+
+%%
+
+[invDict,Coeff] = informationTheoretic(D,X,C,params,3);
+
+%%
+toc;

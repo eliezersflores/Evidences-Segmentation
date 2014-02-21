@@ -1,0 +1,42 @@
+function [Y,Yt,C,isTrain] = evidencesGenerateWindows(n,totalBens,totalMals,blockType)
+
+    h = waitbar(0,'Generating the evidences...');
+    
+    images = loadShadAttenuatedImages('images','tif'); 
+    gts = loadImages('gts','tif');
+    
+    [bensTrain,~] = crossvalind('HoldOut',totalBens,.5); 
+    [malsTrain,~] = crossvalind('HoldOut',totalMals,.5);
+    isTrain = [bensTrain; malsTrain]; 
+    
+    cellY = cell(1,numel(find(isTrain==1)));
+    cellC = cell(1,numel(find(isTrain==1)));
+    cellYt = cell(1,numel(find(isTrain==0)));
+    
+    for k = 1:totalBens + totalMals
+
+        waitbar(k/totalTrain); 
+        img = images{idx};
+
+        if isTrain(k)
+            gt = gts{idx}; 
+            cellY{k} = img2col(img, n, blockType);
+            cellC{k} = img2centers(gt, n, blockType);
+        else
+            cellYt{k} = img2col(img, n, blockType);
+        end;
+
+        
+        
+        
+        
+    end;
+    
+    Y = horzcat(cellY{:});
+    Yt = horzcat(cellYt{:});
+    C = horzcat(cellC{:});
+    
+    close(h); 
+    
+end
+
